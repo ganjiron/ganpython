@@ -29,7 +29,16 @@ def f6(lst):
     else:
         return f6(lst[0]) + f6(lst[1:])
     
+def f8(s):
+    #baseline
+    if len(s) == 0 or len(s) == 1:
+        return True
 
+    #recursive
+    if s[0] == s[len(s)-1]:
+        return f8(s[1:len(s)-1])
+    else:
+        return False
 
 def f10(list):
     #baseline
@@ -38,6 +47,14 @@ def f10(list):
         
     #reculsive
     return 1 + f10(list[1:])
+
+def f12(n):
+    #baseline
+    if n == 0:
+        return
+    #recursive
+    print(n)
+    f12(n-1)
 
 def f14(lst):
     print(lst)
@@ -49,7 +66,27 @@ def f14(lst):
     else:
         return f14(lst[1:])
 
+def f16(list):
+    ret = []
+    if list == []:
+        return []
+    if list[0] % 2 == 0:
+        return f16(list[1:])
+    else:
+        ret.append(list)
+        return ret
 if __name__ == '__main__':
+    print(f16([1,3,5,7]))
+    print(f16([2,4]))
+    print(f16([1,2,3,4,5]))
+    # f12(3)
+    # f12(0)
+    # f12(1)
+    # print(f8(""))
+    # print(f8("kayak"))
+    # print(f8("penguin"))
+    # print(f8("a"))
+
 #     print(f2(1))
 #     print(f2(6))
 #     print(f2(11))
@@ -57,10 +94,10 @@ if __name__ == '__main__':
 #     f4([1,2,3,4])
 #     f4([2,4])
 #     f4([11,42,63,15])
-    print(f6(['baa']))
-    print(f6(['baa' , [4,1,3,[1,3]]]))
-    print(f6([]))
-    print(f6([[[[[[[[[[23]]]]]]]]]]))
+#     print(f6(['baa']))
+#     print(f6(['baa' , [4,1,3,[1,3]]]))
+#     print(f6([]))
+#     print(f6([[[[[[[[[[23]]]]]]]]]]))
 #     print(f10([1,2,3]))
 #     print(f10([]))
 #     print(f10([2]))

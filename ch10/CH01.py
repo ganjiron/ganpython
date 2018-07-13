@@ -47,6 +47,7 @@ def palindrome():
     size = len(var)
     
     while(True):
+        pass
         
     
 

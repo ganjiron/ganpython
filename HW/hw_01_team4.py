@@ -72,6 +72,28 @@ def f18(n):
     for i in range(1,n+1):
         result = result * i
     print(result)
+
+def f20(list):
+    for n in list:
+        for i in range (n , -1 , -1):
+            print(i , end=' ')
+        print()
+
+def f22(n):
+    for i in range(1 , n+1):
+        if i %2 ==0 or i%3 ==0:
+            print(i)
+
+def f24(list):
+    first , second = 0,0
+    for n in list:
+        if n >= second:
+            if n >= first:
+                second = first
+                first = n
+            else:
+                second = n
+    print(second)
         
 def f26(lst):
     top = 0
@@ -111,16 +133,29 @@ if __name__ == '__main__':
 #     f12([1,2,3,4,5])
 #     f12([-1,-2,-3])
 
+#     f14([1,2,-4])
+#     f14([1,-2,-3,1,-2,-3])
+#     f14([-1,1,1,1])
+
 #     f16(3)
 #     f16(2)
 #     f16(1)
 #     
-    f18(0)
-    f18(2)
-    f18(3)
-#     f14([1,2,-4])
-#     f14([1,-2,-3,1,-2,-3])
-#     f14([-1,1,1,1])
+#     f18(0)
+#     f18(2)
+#     f18(3)
+
+#     f20([])
+#     f20([1,3,5])
+#     f20([5,3,6,2])
+#
+#     f22(10)
+#     f22(1)
+#     f22(3)
+
+    # f24([1,4,3,2,5])
+    # f24([3,2])
+    # f24([3,4])
 
 #     f26([[1,2,3],[4,5,6],[7,8,9]])
 #     f26([[3,2,1],[0,-1,-2]])
