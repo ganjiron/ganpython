@@ -66,16 +66,38 @@ def f14(lst):
     else:
         return f14(lst[1:])
 
-def f16(list):
+def f16(list ):
     ret = []
     if list == []:
         return []
     if list[0] % 2 == 0:
         return f16(list[1:])
     else:
-        ret.append(list)
+        ret.append(list[0])
+        tmp = f16(list[1:])
+        for i in range(len(tmp)):
+            ret.append(tmp[i])
         return ret
+
+def f18(a,b):
+    #baseline
+    tmp = 0
+    if a == 0 or b == 0:
+        return 1
+    #recursive
+    if a <= b :
+        tmp = a
+    else: tmp = b
+    for i in range(2, tmp+1):
+        if a%i == 0 and b%i ==0:
+            return i * f18(int(a / i), int(b / i))
+            break
+    return 1
+
 if __name__ == '__main__':
+    # print(f18(5,4))
+    # print(f18(40,60))
+    # print(f18(9,3))
     print(f16([1,3,5,7]))
     print(f16([2,4]))
     print(f16([1,2,3,4,5]))
