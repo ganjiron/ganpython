@@ -4,7 +4,7 @@ class dbProv():
         self.conn = pymysql.connect(
             host='s.snu.ac.kr',
             user='A4',
-            password='suck0070',
+            password='4444',
             db='A4',
             charset='utf8',
             cursorclass=pymysql.cursors.DictCursor
@@ -14,7 +14,7 @@ class dbProv():
         connection = pymysql.connect(
             host='s.snu.ac.kr',
             user='A4',
-            password='suck0070',
+            password='4444',
             db='A4',
             charset='utf8',
             cursorclass=pymysql.cursors.DictCursor
@@ -80,12 +80,20 @@ class dbProv():
             print("{0}\t{1}".format(i['title'] , i['grade']))
         curs.close()
 
+    def deleteTest(self , argv):
+        curs = self.conn.cursor()
+        sql = 'delete from takes where stu_id = {0}'.format(argv)
+        curs.execute(sql)
+        self.conn.commit()
+
 if __name__ == '__main__':
     try:
         a = dbProv()
         # a.selectNameofStdudent()
         # a.selectNameOfProfessor()
-        a.selectGrade(input())
+        # a.selectGrade(input())
+        print("지울사람ID : " , end=' ' )
+        a.deleteTest( input())
     except Exception as ex:
         print(ex)
     finally:
