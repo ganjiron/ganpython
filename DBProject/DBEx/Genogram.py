@@ -39,6 +39,20 @@ class genoGram():
         curs.close()
         return rows
 
+    def findFather_id(self , id):
+        curs = self.conn.cursor()
+        sql = "select b.parent id from person a , parentship b , marriage c\
+        where a.id =  b.child\
+        and b.parent = c.husband\
+        and a.id = '{0}'".format(id)
+        curs.execute(sql)
+        rows = curs.fetchall()
+        curs.close()
+        tmp = []
+        for i in rows:
+            tmp.append(i['id'])
+        return tmp
+
     # 형제를 찾아라
 
     # 자식을 찾아라
@@ -59,7 +73,8 @@ class genoGram():
 
         fatherID = gg.findFather(id)
         print('아빠')
-        print(fatherID[0]['id'])
+        # print(fatherID[0]['id'])
+        print(fatherID)
         # 할아버지를 찾아라
         print('할배')
         grFaID = gg.findFather(fatherID[0]['id'])
@@ -73,19 +88,34 @@ class genoGram():
         # 형제의 자식들을 찾아라
         cousin = []
         for i in range(len(faBro)):
-            tmpCou = gg.findChild(faBro[i]['id'])
-            cousin.append(tmpCou)
+            if faBro[i]['id'] == fatherID[0]['id']:
+                pass
+            else:
+                tmpCou = gg.findChild(faBro[i]['id'])
+                # cousin.append(tmpCou)
+                for j in tmpCou:
+                    cousin.append(j['id'])
         print('사촌')
         # cousin.sort()
-        print(cousin)
+        print(sorted(cousin))
+
+    def kthFather(self , id , k):
+        print(gg.findFather_id(id))
 
 
 if __name__ == '__main__':
     gg = genoGram()
-    # 아빠를 찾아라
+    #1 아빠를 찾아라
+    # print("ID : ", end=' ')
+    # id = input()
+    # gg.find_cousins(id)
+
+    #2 k번째 남자조상을 찾아라
     print("ID : ", end=' ')
     id = input()
-    gg.find_cousins(id)
+    kthFather(id , k)
+
+
 
 
 
