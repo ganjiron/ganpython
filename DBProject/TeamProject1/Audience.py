@@ -12,6 +12,5 @@ class Audience():
         self.a_age
 
 
-
 if __name__ == '__main__':
     pass
