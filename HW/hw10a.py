@@ -35,9 +35,7 @@ def f20(matrix):
     print (list(enumerate(matrix)))
     print(*list(map(lambda x:x[1][x[0]] , enumerate(matrix))), sep='\n')
 
-def f22(lst):
-    # lambda x:print(x , end='') , range(lst , 0 , -1)
-    print(*list(map(lambda x:list(range(x,-1,-1)) , lst)) , sep='\n')
+
 
 def test(lst):
     from functools import reduce
@@ -50,11 +48,37 @@ def f16(n):
     print(*list(map(lambda x:'*'*x , range(n , 0 , -1))),sep='\n')
 
 
+def f22(lst):
+    # lambda x:print(x , end='') , range(lst , 0 , -1)
+    # print(*list(map(lambda x:list(range(x,-1,-1)) , lst)) , sep='\n')
+    print(*list(map(lambda x: list(range(x, -1, -1)), lst)), sep='\,')
+
+def f24(n):
+    print(*list(filter(lambda x: x%2 ==0 or x%3==0 , range(1, n+1))) , sep='\n')
+
+def f26(lst):
+    # print(list(sorted(lst))[-2])
+    print(list(map(lambda x: x, sorted(lst)))[-2])
+
+def f28(lst):
+    print(*list(map(lambda x:max(x) , lst)),sep='\n')
+
+
 if __name__ == '__main__':
+    f28([[1,2,3],[4,5,6],[7,8,9]])
+    f28([[3,2,1],[0,-1,-2]])
+    f28([[1,2,3,4],[1],[34],[2],[3],[56],[67]])
+    # f26([1,4,3,2,5])
+    # f26([3,2])
+    # f26([3,4])
     # test([1,2,-3,4])
+    # f24(10)
+    # f24(1)
+    # f24(3)
     # f22([1,3,5])
-    f20([[1,0],[0,1]])
-    f20([[1,2,3],[4,5,6],[7,8,9]])
+    # f20([[1]])
+    # f20([[1,0],[0,1]])
+    # f20([[1,2,3],[4,5,6],[7,8,9]])
     # f18(3)
 
     # f16(3)

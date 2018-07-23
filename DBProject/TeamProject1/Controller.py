@@ -106,6 +106,10 @@ class Controller():
         # - 계산된 총 티켓 가격 은 소수점 첫째자리에서 반올림
         pass
 
+    # 위에 보여줄 남은 좌석을 Return 한다.
+    def remainSeat(self , s_id):
+        pass
+
 
 # 12. 공연장에 배정된 공연 목록 출력
 # - 공연장에 배정된 모든 공연의 정보를 출력한다 .
