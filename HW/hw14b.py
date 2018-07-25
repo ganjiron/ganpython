@@ -43,8 +43,52 @@ def sort_repeated(L):
             s.add(L[i])
     print(sorted(list(s)))
 
+def makeDick(lst):
+    tmp = dict()
+    if len(lst) == 1: #base
+        tmp[lst[0]] = 1
+        # print(tmp)
+        return tmp
+    tmp.update(makeDick(lst[1:]))
+    #recursive
+    if lst[0] in tmp.keys() :
+        tmp[lst[0]] += 1
+    else:
+        tmp[lst[0]] =1
+    return tmp
+
+def mostF(lst):
+    tmp = makeDick(lst)
+    print(max(tmp , key=tmp.get))
+    print(max(tmp.values()))
+
+def histogram(letters):
+    # print(letters)
+    a = list(letters.values())
+    dicTmp = dict()
+    for i in a:
+        dicTmp[i] = a.count(i)
+    return dicTmp
+
+
 if __name__ == '__main__':
-    sort_repeated([3,1,2,3,2,1])
+    letters = {1:'a' , 2:'b' , 3:'a'}
+    print(histogram(letters))
+    letters = {1: 'a', 2: 'b', 3: 'c'}
+    print(histogram(letters))
+    print(letters)
+    letters[4]  ='a'
+    letters[5] = 'b'
+    letters[6] = 'a'
+    print(letters)
+    print(histogram(letters))
+    # print(makeDick([2,5,3,4,6,4,2,4,5]))
+    # mostF([2, 5, 3, 4, 6, 4, 2, 4, 5])
+    # lst = [1,2,3]
+    # tmp = dict()
+    # tmp[lst[0]] = 1
+    # print(tmp)
+    # sort_repeated([3,1,2,3,2,1])
     # print(is_reverse('abc' , 'cba'))
     # print(is_reverse('abc', 'abc'))
     # print(is_reverse('abc', 'dcba'))
