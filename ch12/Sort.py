@@ -101,45 +101,35 @@ class Sort_GS():
 if __name__ == '__main__':
     # a = ranNum(100, 1, 100000)
     sor = Sort_GS()
-    a = sor.ranNum(10000, 1, 100000)
-    # print(sor.selSort(sor.ranNum(100, 1, 100000)))
-    # print(sor.selSort(sor.ranNum(1000, 1, 100000)))
-    start_time = time.time()
-    sor.cnt = 0
-    # print(sor.selSort(a.copy()))
-    sor.selSort(a.copy())
-    print("selSort cnt:{1} : {0} seconds ---".format(time.time() - start_time , sor.cnt ))
+    a = sor.ranNum(10, 1, 10)
 
-    # print(sor.msort(sor.ranNum(10, 1, 100000)))
-    # print(sor.msort(sor.ranNum(1000, 1, 100000)))
-    start_time = time.time()
-    sor.cnt = 0
-    # print(sor.msort(a.copy()))
-    sor.msort(a.copy())
-    print("msort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
+    # a = random.randrange(1,1000000)
+    # start_time = time.time()
+    # sor.cnt = 0
+    # sor.selSort(a.copy())
+    # print("selSort cnt:{1} : {0} seconds ---".format(time.time() - start_time , sor.cnt ))
+    #
+    # start_time = time.time()
+    # sor.cnt = 0
+    # sor.msort(a.copy())
+    # print("msort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
+    #
+    # start_time = time.time()
+    # sor.cnt = 0
+    # sor.bubbleSort(a.copy())
+    # print("bubbleSort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
+    #
+    # start_time = time.time()
+    # sor.cnt = 0
+    # sor.insertion_sort(a.copy())
+    # print("insertion_sort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
 
-    # print(sor.bubbleSort(sor.ranNum(10, 1, 100000)))
-    # print(sor.bubbleSort(sor.ranNum(1000, 1, 100000)))
+    # start_time = time.time()
+    # sor.cnt = 0
+    # sor.quickSort(a.copy())
+    # print("quickSort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
+    #
     start_time = time.time()
-    # print(sor.bubbleSort(a.copy()))
-    sor.cnt = 0
-    sor.bubbleSort(a.copy())
-    print("bubbleSort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
-
-    start_time = time.time()
-    # print(sor.insertion_sort(a.copy()))
-    sor.cnt = 0
-    sor.insertion_sort(a.copy())
-    print("insertion_sort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
-
-    start_time = time.time()
-    # print(sor.quickSort(a.copy()))
-    sor.cnt = 0
-    sor.quickSort(a.copy())
-    print("quickSort cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
-
-    start_time = time.time()
-    # print(sorted(a.copy()))
     sorted(a.copy())
     print("sorted cnt:{1} : {0} seconds ---".format(time.time() - start_time, sor.cnt))
 
