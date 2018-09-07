@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Horizontal Bars</title>
+</head>
+<body>
+<svg height="1000" width="1000">
+</svg>
+<script src='./lib/d3.v5.min.js'></script>
+<script>
+
+    let students = [
+      {"name": "Jane", "value": 80},
+      {"name": "John", "value": 90},
+      {"name": "Bob", "value": 60}
+    ];
+
+    // TODO
+    let maxScore = 100;
+    let maxHeight = 200;
+    let svg = d3.select('svg');
+    svg.selectAll('rect').data(students)
+    .enter()
+    .append('rect')
+    .attr('width' , 50)
+    .attr('height' , function(d,i,nodes) {
+        <!--console.log(d,i,nodes);-->
+        return (d.value / maxScore) * maxHeight
+        })
+    .attr('x' , function(d,i,nodes) {
+        return i*60
+        })
+    .attr('y',function(d,i,nodes) {
+        return maxHeight - d3.select(this).attr('height');
+        })
+
+
+</script>
+</body>
+</html>

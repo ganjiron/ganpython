@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Scatterplot</title>
+    <style>
+    </style>
+</head>
+<body>
+<!--<svg width="550" height="550">-->
+<!--</svg>-->
+<div id='plot'></div>
+<script src="./lib/d3.v5.min.js"></script>
+<script src="./data/movie.js"></script>
+<script>
+
+    // load가 잘 되었는지 확인 후 삭제
+    <!--console.log(d3);-->
+    <!--console.log(data);-->
+
+    let svgWidth = 550;
+    let svgHeight = 550;
+    let margin = {top: 20 , right:10 , bottom:30 , left:40};
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+
+
+
+    function translate(x,y) {
+      return 'translate(' + x + ' , ' + y + ')'
+    }
+
+    data.forEach(function(d){
+        d.ur_gross = parseFloat(d.us_gross);
+        d.rotten_rating = parseFloat(d.rotten_rating);
+    });
+
+    let svg = d3.select('#plot')
+    .append('svg')
+      .attr('width' , svgWidth)
+      .attr('height' , svgHeight)
+      .append('g')
+        .attr('transform' , translate(margin.left , margin.top));
+
+    let x = d3.scaleLinear()
+    .domain([
+      d3.min(data , d => d.rotten_rating),
+      d3.max(data , d => d.rotten_rating)
+      ])
+      .range([0,width]);
+
+    let y = d3.scaleLinear()
+    .domain([
+      d3.min(data , d => d.ur_gross),
+      d3.max(data , d => d.ur_gross)
+      ])
+      .range([height,0]);
+
+    let color =
+    d3.scaleOrdinal()
+    .domain(['전체관람가', '7세이상', '15세이상', '19세이상'])
+    .range(['#3366cc', '#109618', '#ff9900', '#dc3912']);
+
+    svg.selectAll('circle')
+        .data(data)
+        .enter()
+            .append('circle')
+            .attr('r' , 3.5)
+            .attr('cx' , d=> x(d.rotten_rating))
+            .attr('cy' , d=> y(d.ur_gross))
+            .style('fill' , d=> color(d.rating));
+    let xAxis = d3.axisBottom(x);
+    let yAxis = d3.axisLeft(y);
+
+    svg.append('g')
+    .attr('transform' , translate(0,height))
+    .call(xAxis);
+
+    svg
+    .append('g')
+    .call(yAxis);
+
+</script>
+</body>
+</html>

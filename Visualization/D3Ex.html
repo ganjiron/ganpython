@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>My Title</title>
+</head>
+<body>
+<p>Test</p>
+<!--<svg height="1000" width="1000">-->
+<!--<rect x="0" y="0" width="100" height="50"></rect>-->
+<!--<rect x="0" y="100" width="200" height="50"></rect>-->
+<!--<rect x="0" y="200" width="300" height="50"></rect>-->
+<!--</svg>-->
+<svg height="1000" width="1000">
+</svg>
+
+<!--요거는 online 으로 다운받아서 바로 적용하는것-->
+<!--<script src = 'https://d3js.org/d3.v5.min.js'></script>-->
+<script src='./lib/d3.v5.min.js'></script>
+
+<script>
+    let my_data = [1,2,3];
+    let svg = d3.select('svg');
+    svg.selectAll('rect').data(my_data)
+    .enter()
+    .append('rect')
+    .attr('width' , function(d,i,nodes) {
+        console.log(d,i,nodes)
+        return d*20
+        })
+    .attr('height' , function(d,i,nodes) {return d*20})
+    .attr('x' , function(d,i,nodes) {return d*100})
+    .attr('y',function(d,i,nodes) {return d*100});
+    <!--d3.selectAll('rect')-->
+    <!--.attr('width' , 600);-->
+    <!--d3.selectAll('p').style('color','red');-->
+
+</script>
+
+</body>
+</html>

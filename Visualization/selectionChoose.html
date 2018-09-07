@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Selection2</title>
+</head>
+<body>
+<svg height="1000" width="1000">
+    <rect id="rect_1" x="0" y="0" width="100" height="50"></rect>
+    <rect id="rect_2" x="0" y="100" width="200" height="50"></rect>
+    <rect id="rect_3" x="0" y="200" width="300" height="50"></rect>
+</svg>
+<script src="./lib/d3.v5.min.js"></script>
+<script>
+
+    let my_data = [1, 2, 3, 4, 5];
+    let svg = d3.select('svg');
+
+    svg.selectAll('rect')
+    .data(my_data)
+    .enter()
+    .append('rect')
+    .attr('width' , d => d*100)
+    .attr('height',50)
+    .attr('x' , 0)
+    .attr('y' , d=> (d-1)*100);
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Scatterplot with Select</title>
+    <style>
+    </style>
+</head>
+<body>
+<div id="plot"></div>
+<div id="option"></div>
+<script src="./lib/d3.v5.min.js"></script>
+<script src="./data/movie.js"></script>
+<script>
+
+    function translate(x, y) {
+      return 'translate(' + x + ', ' + y + ')';
+    }
+
+    function duration(transition) {
+        return transition.duration(500);
+    }
+
+    data.forEach(function(d) {
+        d.budget = parseFloat(d.budget);
+        d.us_gross = parseFloat(d.us_gross);
+        d.worldwide_gross = parseFloat(d.worldwide_gross);
+        d.rotten_rating = parseFloat(d.rotten_rating);
+        d.imdb_rating = parseFloat(d.imdb_rating);
+        d.imdb_votes = parseFloat(d.imdb_votes);
+    });
+
+    let svgWidth = 550;
+    let svgHeight = 550;
+    let margin = {top: 20, right: 10, bottom:30, left: 40};
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+    let svg =
+    d3.select('#plot')
+    .append('svg')
+      .attr('width', svgWidth)
+      .attr('height', svgHeight)
+      .append('g')
+        .attr('transform', translate(margin.left, margin.top));
+
+    let options = ['budget', 'us_gross', 'worldwide_gross',
+    'rotten_rating', 'imdb_rating', 'imdb_votes'];
+    let selectedXVar = options[0];
+    let selectedYVar = options[1];
+
+    let x = d3.scaleLinear();
+    let y = d3.scaleLinear();
+    let xAxis = d3.axisBottom();
+    let yAxis = d3.axisLeft();
+
+    function init() {
+
+        d3.select('#option')
+        .append('div')
+            .attr('id', 'x-axis-option')
+            .append('p')
+                .style('display', 'inline')
+                .text('X-Axis : ');
+
+        d3.select('#x-axis-option')
+        .append('select')
+            .attr('id', 'x-select')
+            .selectAll('option')
+            .data(options)
+            .enter()
+            .append('option')
+                .attr('id', d => 'x-' + d)
+                .text(d => d)
+                .property('value', d => d);
+
+        d3.select('#option')
+        .append('div')
+            .attr('id', 'y-axis-option')
+            .append('p')
+                .style('display', 'inline')
+                .text('Y-Axis : ');
+
+        d3.select('#y-axis-option')
+        .append('select')
+            .attr('id', 'y-select')
+            .selectAll('option')
+            .data(options)
+            .enter()
+            .append('option')
+                .attr('id', d => 'y-' + d)
+                .text(d => d)
+                .property('value', d => d);
+
+        d3.select('#x-' + selectedXVar)
+        .attr('selected', 'selected');
+        d3.select('#y-' + selectedYVar)
+        .attr('selected', 'selected');
+
+        d3.select('#option')
+        .on('change', function() {
+            selectedXVar = d3.select('#x-select').property('value');
+            selectedYVar = d3.select('#y-select').property('value');
+            update();
+        });
+
+        svg
+        .append('g')
+            .attr('class', 'x axis')
+            .attr('transform', translate(0, height))
+            .append('text')
+                .attr('class', 'x-label')
+                .attr('x', width)
+                .attr('y', -6)
+                .style('text-anchor', 'end')
+                .style('fill', 'black');
+
+        svg
+        .append('g')
+            .attr('class', 'y axis')
+            .append('text')
+                .attr('class', 'y-label')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 13)
+                .style('fill', 'black');
+
+        let color = d3.scaleOrdinal()
+        .domain(['전체관람가', '7세이상', '15세이상', '19세이상'])
+        .range(['#3366cc', '#109618', '#ff9900', '#dc3912']);
+
+        svg
+        .selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('r', 3.5)
+        .style('fill', d => color(d.rating));
+
+        let legend = svg
+        .selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+            .attr('transform', (d, i) => {
+                return translate(0, i * 20);
+            });
+
+        legend
+        .append('rect')
+            .attr('x', width - 18)
+            .attr('width', 18)
+            .attr('height', 18)
+            .style('fill', color);
+
+        legend
+        .append('text')
+            .attr('x', width - 24)
+            .attr('y', 9)
+            .attr('dy', 5)
+            .style('text-anchor', 'end')
+            .text(d => d);
+
+        update();
+    }
+
+    function updateScale() {
+        x
+        .domain([
+            d3.min(data, d => d[selectedXVar]),
+            d3.max(data, d => d[selectedXVar])
+        ])
+        .range([0, width]);
+        xAxis.scale(x);
+
+        y
+        .domain([
+            d3.min(data, d => d[selectedYVar]),
+            d3.max(data, d => d[selectedYVar])
+        ])
+        .range([height, 0]);
+        yAxis.scale(y);
+    }
+
+    function updateAxis() {
+        d3.select('.x').transition().call(duration).call(xAxis);
+        d3.select('.y').transition().call(duration).call(yAxis);
+    }
+
+    function updateText() {
+        svg.select('.x-label').text(selectedXVar);
+        svg.select('.y-label').text(selectedYVar);
+    }
+
+    function updateCircles() {
+        svg
+        .selectAll('circle')
+        .transition()
+        .call(duration)
+        .attr('cx', d => x(d[selectedXVar]))
+        .attr('cy', d => y(d[selectedYVar]));
+    }
+
+    function update() {
+        updateScale();
+        updateAxis();
+        updateText();
+        updateCircles();
+    }
+
+    init();
+
+
+</script>
+</body>
+</html>
