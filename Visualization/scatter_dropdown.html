@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Scatterplot</title>
+    <style>
+    </style>
+</head>
+<body>
+<div id="plot"></div>
+<div id="control">
+    <div>
+        <span>X-Axis:</span>
+        <select id="x-select"></select>
+    </div>
+    <div>
+        <span>Y-Axis:</span>
+        <select id="y-select"></select>
+    </div>
+</div>
+<script src="./lib/d3.v5.min.js"></script>
+<script src="./data/movie.js"></script>
+<script>
+
+    let num_vars = ['budget' , 'us_gross' , 'worldwide_gross' ,
+    'rotten_rating' , 'imdb_rating' , 'imdb_votes'];
+    let selectedXVar = num_vars[0];
+    let selectedYVar = num_vars[1];
+    data.forEach(function(d){
+        num_vars.forEach(function(v){
+            d[v] = parseFloat(d[v]);
+           });
+     });
+
+    function translate(x, y) {
+      return 'translate(' + x + ', ' + y + ')';
+    }
+
+    <!--data.forEach(function(d) {-->
+        <!--d.us_gross = parseFloat(d.us_gross);-->
+        <!--d.rotten_rating = parseFloat(d.rotten_rating);-->
+    <!--});-->
+
+    let svgWidth = 550;
+    let svgHeight = 550;
+    let margin = {top: 20, right: 10, bottom:30, left: 40};
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+    let svg =
+    d3.select('#plot')
+    .append('svg')
+      .attr('width', svgWidth)
+      .attr('height', svgHeight)
+      .append('g')
+        .attr('transform', translate(margin.left, margin.top));
+
+    let x = d3.scaleLinear();
+    let y = d3.scaleLinear();
+
+    let xAxis = d3.axisBottom(x);
+    let yAxis = d3.axisLeft(y);
+
+
+    function init(){
+        d3.select('#x-select')
+        .selectAll('option')
+        .data(num_vars)
+        .enter()
+        .append('option')
+            .attr('id' , d => 'x-'+d)
+            .text(d=>d)
+
+        d3.select('#y-select')
+        .selectAll('option')
+        .data(num_vars)
+        .enter()
+        .append('option')
+            .attr('id' , d => 'y-'+d)
+            .text(d=>d)
+
+        d3.select('#x-'+selectedXVar).attr('selected' , 'selected');
+        d3.select('#y-'+selectedYVar).attr('selected' , 'selected');
+
+        d3.select('#control')
+        .on('change' , function(){
+            selectedXVar = d3.select('#x-select').property('value');
+            selectedYVar = d3.select('#y-select').property('value');
+            update();
+        });
+
+            let color =
+            d3.scaleOrdinal()
+            .domain(['전체관람가', '7세이상', '15세이상', '19세이상'])
+            .range(['#3366cc', '#109618', '#ff9900', '#dc3912']);
+
+        let legend = svg
+        .selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+          .attr('transform', (d, i) => {
+            return translate(0, i * 20);
+          });
+
+        legend
+        .append('rect')
+          .attr('x', width - 18)
+          .attr('width', 18)
+          .attr('height', 18)
+          .style('fill', color);
+
+        legend
+        .append('text')
+          .attr('x', width - 24)
+          .attr('y', 9)
+          .attr('dy', 5)
+          .style('text-anchor', 'end')
+          .text(d => d);
+
+            svg
+        .append('g')
+          .attr('id' , 'x-axis')
+          .attr('transform', translate(0, height))
+          .append('text')
+            .attr('id' , 'x_label')
+            .attr('x', width)
+            .attr('y', -6)
+            .style('text-anchor', 'end')
+            .style('fill', 'black');
+
+        svg
+        .append('g')
+        .attr('id' , 'y-axis')
+          .append('text')
+            .attr('id' , 'y_label')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 13)
+            .style('fill', 'black');
+        svg
+        .selectAll('circle')
+        .data(data)
+        .enter()
+          .append('circle')
+          .attr('r', 3.5)
+          .style('fill', d => color(d.rating));
+        update();
+    }
+
+    function update(){
+    }
+
+    init();
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
