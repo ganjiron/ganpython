@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>DS2 Vis Tool</title>
+    <style>
+
+    table {
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    th {
+        background-color: #0066CC;
+        color: white;
+        border: 1px solid black;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+
+
+    </style>
+</head>
+<body>
+<span id="barchart"></span>
+<span id="scatterplot"></span>
+<span id="control">
+    <div>
+      <span>X-Axis: </span>
+      <select id="x-select"></select>
+    </div>
+    <div>
+      <span>Y-Axis: </span>
+      <select id="y-select"></select>
+    </div>
+  </span>
+<div id="datatable"></div>
+<script src="./lib/d3.v5.min.js"></script>
+<script src="./data/movie.js"></script>
+<script>
+
+    function translate(x, y) {
+      return 'translate(' + x + ', ' + y + ')';
+    }
+
+    function duration(transition) {
+      return transition.duration(500);
+    }
+
+    let num_vars = ['budget', 'us_gross', 'worldwide_gross',
+    'rotten_rating', 'imdb_rating', 'imdb_votes'];
+    let selectedXVar = num_vars[0];
+    let selectedYVar = num_vars[1];
+
+    data.forEach(function(d, i) {
+      num_vars.forEach(function(v) {
+        d[v] = parseFloat(d[v]);
+      });
+
+      d._selected = false;
+      d._alive = true;
+      d._id = i + 1;
+    });
+
+    let dataGenre = d3.nest()
+    .key(d => d.genre)
+    .rollup(d => d.length)
+    .entries(data)
+    .map(d => obj = {"genre": d.key, "count": d.value, "_selected": false});
+
+    let svgWidth = 450;
+    let svgHeight = 450;
+    let margin = {top: 20, right: 10, bottom:30, left: 40};
+    let width = svgWidth - margin.left - margin.right;
+    let height = svgHeight - margin.top - margin.bottom;
+
+    function drawScatterplot() {
+      let svg =
+      d3.select('#scatterplot')
+      .append('svg')
+        .attr('width', svgWidth)
+        .attr('height', svgHeight)
+        .append('g')
+          .attr('transform', translate(margin.left, margin.top));
+
+      let x = d3.scaleLinear();
+      let y = d3.scaleLinear();
+      let xAxis = d3.axisBottom();
+      let yAxis = d3.axisLeft();
+
+      function init() {
+
+        d3.select('#control')
+        .style("display", "inline-block")
+        .style('vertical-align', 'top')
+        .style('padding-top', '20px')
+        .style('padding-left', '10px');
+
+        d3.select('#x-select')
+        .selectAll('option')
+        .data(num_vars)
+        .enter()
+        .append('option')
+          .attr('id', d => 'x-' + d)
+          .text(d => d);
+
+        d3.select('#y-select')
+        .selectAll('option')
+        .data(num_vars)
+        .enter()
+        .append('option')
+          .attr('id', d => 'y-' + d)
+          .text(d => d);
+
+        d3.select('#x-' + selectedXVar).attr('selected', 'selected');
+        d3.select('#y-' + selectedYVar).attr('selected', 'selected');
+
+        d3.select('#control')
+        .on('change', function() {
+          selectedXVar = d3.select('#x-select').property('value');
+          selectedYVar = d3.select('#y-select').property('value');
+          update();
+        });
+
+        let color =
+        d3.scaleOrdinal()
+        .domain(['전체관람가', '7세이상', '15세이상', '19세이상'])
+        .range(['#3366cc', '#109618', '#ff9900', '#dc3912']);
+
+        let legend = svg
+        .selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+          .attr('transform', (d, i) => {
+            return translate(0, i * 20);
+          });
+
+        legend
+        .append('rect')
+          .attr('x', width - 18)
+          .attr('width', 18)
+          .attr('height', 18)
+          .style('fill', color);
+
+        legend
+        .append('text')
+          .attr('x', width - 24)
+          .attr('y', 9)
+          .attr('dy', 5)
+          .style('text-anchor', 'end')
+          .text(d => d);
+
+        svg
+        .append('g')
+          .attr('id', 'x_axis')
+          .attr('transform', translate(0, height))
+          .append('text')
+            .attr('id', 'x_label')
+            .attr('x', width)
+            .attr('y', -6)
+            .style('text-anchor', 'end')
+            .style('fill', 'black');
+
+        svg
+        .append('g')
+          .attr('id', 'y_axis')
+          .append('text')
+            .attr('id', 'y_label')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 13)
+            .style('fill', 'black');
+
+        svg
+        .selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+          .attr('r', 3.5)
+          .style('stroke', 'black')
+          .style('stroke-width', 0)
+          .style('fill', d => color(d.rating));
+
+        update();
+      }
+
+      function update() {
+        updateScale();
+        updateAxis();
+        updateText();
+        updateCircles();
+      }
+
+      function updateScale() {
+        x.domain([
+          d3.min(data, d => d[selectedXVar]),
+          d3.max(data, d => d[selectedXVar])
+        ])
+        .range([0, width]);
+
+        y.domain([
+          d3.min(data, d => d[selectedYVar]),
+          d3.max(data, d => d[selectedYVar])
+        ])
+        .range([height, 0]);
+
+        xAxis.scale(x);
+        yAxis.scale(y);
+      }
+
+      function updateAxis() {
+        svg.select('#x_axis').transition().call(duration).call(xAxis);
+        svg.select('#y_axis').transition().call(duration).call(yAxis);
+      }
+
+      function updateText() {
+        svg.select('#x_label').text(selectedXVar);
+        svg.select('#y_label').text(selectedYVar);
+      }
+
+      function updateCircles() {
+        svg.selectAll('circle')
+        .transition()
+        .call(duration)
+        .attr('cx', d => x(d[selectedXVar]))
+        .attr('cy', d => y(d[selectedYVar]));
+
+        svg.selectAll('circle')
+        .style('opacity', 0.1)
+        .style('stroke-width', 0)
+        .on('click', null)
+        .filter(d => d._alive)
+        .style('opacity', 1)
+        .on('click', function(d) {
+          d._selected = !d._selected;
+          updateVisualization();
+        })
+        .filter(d => d._selected)
+        .style('stroke-width', 2);
+      }
+
+      init();
+
+      return update;
+    }
+
+    function drawBarChart() {
+      let svg =
+      d3.select('#barchart')
+      .append('svg')
+        .attr('width', svgWidth)
+        .attr('height', svgHeight)
+        .append('g')
+          .attr('transform', translate(margin.left, margin.top));
+
+      let x =
+      d3.scaleBand()
+      .domain(dataGenre.map(d => d.genre))
+      .range([0, width])
+      .paddingInner(0.2)
+      .paddingOuter(0.4);
+
+      let y =
+      d3.scaleLinear()
+      .domain([0, d3.max(dataGenre, d => d.count)])
+      .range([height, 0]);
+
+      let xAxis = d3.axisBottom(x);
+      let yAxis = d3.axisLeft(y);
+
+      svg
+      .append("g")
+        .attr("transform", translate(0, height))
+        .call(xAxis);
+
+      svg
+      .append("g")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", "0.71em")
+        .attr("text-anchor", "end")
+        .style('fill', 'black')
+        .text("count");
+
+      let selectedBars = [];
+
+      svg
+      .selectAll("rect")
+      .data(dataGenre)
+      .enter()
+      .append("rect")
+        .attr("x", d => x(d.genre))
+        .attr("y", d => y(d.count))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.count))
+        .style("fill", "#4285F4")
+        .on("click", function(d, i, nodes) {
+          if (selectedBars.length === 0)
+            nodes.forEach(d => d3.select(d).style("opacity", 0.5))
+
+          d._selected = !d._selected;
+
+          if (d._selected) {
+            d3.select(this).style("opacity", 1);
+            selectedBars.push(this);
+          }
+          else {
+            d3.select(this).style("opacity", 0.5);
+            selectedBars = selectedBars.filter(d => d !== this);
+          }
+
+          if (selectedBars.length === 0)
+            nodes.forEach(d => d3.select(d).style("opacity", 1))
+
+          syncData();
+          updateVisualization();
+        });
+    }
+
+    function drawDataTable() {
+      let table =
+      d3.select('#datatable')
+      .style("margin-top", "30px")
+      .append("table");
+
+      let thead = table.append('thead');
+      let	tbody = table.append('tbody');
+      let columns =
+      d3.keys(data[0])
+      .filter(d => !d.startsWith('_'));
+
+      function init() {
+        thead
+        .append('tr')
+          .selectAll('th')
+          .data(columns)
+          .enter()
+            .append('th')
+            .text(d => d);
+
+        update();
+      }
+
+      function update() {
+        let aliveData = data.filter(d => d._alive);
+
+        let update =
+        tbody
+        .selectAll('tr')
+        .data(aliveData, d => d._id);
+
+        update
+        .enter()
+        .append('tr')
+          .on('click', function(d) {
+            d._selected = !d._selected;
+            updateVisualization();
+          })
+          .selectAll('td')
+          .data(function (rowData) {
+            return columns.map(d => rowData[d]);
+          })
+          .enter()
+          .append('td')
+            .text(d => d);
+
+        update.exit().remove();
+
+        update
+        .selectAll('td')
+        .style('background-color', 'white');
+
+        update
+        .filter(d => d._selected)
+        .selectAll('td')
+        .style('background-color', 'yellow');
+      }
+
+      init();
+
+      return update;
+    }
+
+    function syncData() {
+
+      let selectedGenre = dataGenre
+      .filter(d => d._selected)
+      .map(d => d.genre);
+
+      if (selectedGenre.length === 0) {
+        data.forEach(d => d._alive = true);
+      }
+      else {
+        data.forEach(function(d){
+            if(selectedGenre.includes(d.genre)) {
+                d._alive = true;
+            }
+            else {
+                d._alive = false;
+                d._selected = false;
+            }
+        });
+      }
+    }
+
+    function updateVisualization() {
+      updateScatterplot();
+      updateDataTable();
+    }
+
+    let updateScatterplot = drawScatterplot();
+    let updateDataTable = drawDataTable();
+
+    drawBarChart();
+
+
+</script>
+</body>
+</html>
