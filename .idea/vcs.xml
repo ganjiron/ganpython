@@ -4,6 +4,7 @@
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../DQN_gym" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../DeepMind-Atari-Deep-Q-Learner" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../ds2fall2018" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../reinforcement-learning-kr" vcs="Git" />
   </component>
 </project>

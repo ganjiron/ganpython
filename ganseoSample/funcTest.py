@@ -1,3 +1,4 @@
+
 class FuncTest():
     def __init__(self):
         self.funcName = [self.aaa, self.bbb, self.ccc]
