@@ -8,8 +8,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="DS2" />
     <orderEntry type="module" module-name="reinforcement-learning-kr" />
-    <orderEntry type="module" module-name="DeepMind-Atari-Deep-Q-Learner" />
-    <orderEntry type="module" module-name="DQN_gym" />
     <orderEntry type="module" module-name="ds2fall2018" />
   </component>
   <component name="TestRunnerService">
