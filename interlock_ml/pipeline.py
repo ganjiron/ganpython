@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Type
-import numpy as np
 
 from .embedding import Embedder
 from .clustering import Clusterer
@@ -14,7 +13,7 @@ class EmbeddingClusteringPipeline:
         self.embedder = embedder_cls(**(embedder_kwargs or {}))
         self.clusterer = clusterer_cls(**(clusterer_kwargs or {}))
 
-    def run(self, texts: List[str]) -> np.ndarray:
+    def run(self, texts: List[str]) -> List[int]:
         X = self.embedder.embed(texts)
         labels = self.clusterer.fit_predict(X)
         return labels
